@@ -6,7 +6,7 @@ Additional validators for use in WTForms. This project has no inherent translati
 ### Built with
 * Developed in Python 3.7.3
 * Developed with/for WTForms 2.2.1
-* Tests made with pytest 4.6.3 - Coverage not measurable
+* Tests made with pytest 4.6.3 - Coverage: 97%
 
 ## API
 
