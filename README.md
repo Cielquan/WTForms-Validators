@@ -42,6 +42,9 @@ and `{cbx_name}` if desired.
 * **strip_whitespace** - If True (the default) also stop the validation chain on input which consists of 
 only whitespace.
 
+## Code style
+Code is formatted with [black](https://github.com/psf/black).
+
 ## Rights
 This project contains code based on code from [WTForms](https://github.com/wtforms/wtforms) which was modified to 
 match the new needs. The rights of the original work lie by the [creators](https://github.com/wtforms) with this 
@@ -51,6 +54,6 @@ match the new needs. The rights of the original work lie by the [creators](https
 Christian Riedel
 
 ## Version and State
-Version: 1.0.5
+Version: 1.0.6
 
 State: 27.08.2019

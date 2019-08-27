@@ -2,13 +2,17 @@ from decimal import Decimal
 
 try:
     from flask_babelex import _, ngettext as _n
+
 except ImportError:
-    def _(s): return s
+
+    def _(s):
+        return s
 
     def _n(singular, plural, n):
         if n == 1:
             return singular
         return plural
+
 
 from wtforms.compat import string_types as str_types
 from wtforms.validators import StopValidation, ValidationError
@@ -31,9 +35,12 @@ class DecimalDigits(object):
         interpolated using `{min}` and `{max}` if desired. Useful defaults
         are provided depending on the existence of min and max.
     """
+
     def __init__(self, min=-1, max=-1, message=None):
-        assert min != -1 or max != -1, 'At least one of `min` or `max` must be specified.'
-        assert max == -1 or min <= max, '`min` cannot be more than `max`.'
+        assert (
+            min != -1 or max != -1
+        ), "At least one of `min` or `max` must be specified."
+        assert max == -1 or min <= max, "`min` cannot be more than `max`."
         self.min = min
         self.max = max
         self.message = message
@@ -41,29 +48,43 @@ class DecimalDigits(object):
     def __call__(self, form, field):
         data = field.data
         if not isinstance(data, (int, float, Decimal)):
-            raise ValidationError(_(u"""Data type "{type}" is not a supported.""").format(type=str(type(data))))
+            raise ValidationError(
+                _(u"""Data type "{type}" is not a supported.""").format(
+                    type=str(type(data))
+                )
+            )
         s = str(data)
-        digits = 0 if '.' not in s else len(s) - s.index('.') - 1
+        digits = 0 if "." not in s else len(s) - s.index(".") - 1
 
         if digits < self.min or self.max != -1 and digits > self.max:
             message = self.message
             if message is None:
                 if self.max == -1:
-                    message = _n(u'Number must have at least {min} decimal digit.',
-                                 u'Number must have at least {min} decimal digits.',
-                                 self.min)
+                    message = _n(
+                        u"Number must have at least {min} decimal digit.",
+                        u"Number must have at least {min} decimal digits.",
+                        self.min,
+                    )
                 elif self.min == -1:
-                    message = _n(u'Number can have at most {max} decimal digit.',
-                                 u'Number can have at most {max} decimal digits.',
-                                 self.max)
+                    message = _n(
+                        u"Number can have at most {max} decimal digit.",
+                        u"Number can have at most {max} decimal digits.",
+                        self.max,
+                    )
                 elif self.min == self.max:
-                    message = _n(u'Number must have exactly {max} decimal digit.',
-                                 u'Number must have exactly {max} decimal digits.',
-                                 self.max)
+                    message = _n(
+                        u"Number must have exactly {max} decimal digit.",
+                        u"Number must have exactly {max} decimal digits.",
+                        self.max,
+                    )
                 else:
-                    message = _(u'Number must have between {min} and {max} decimal digits.')
+                    message = _(
+                        u"Number must have between {min} and {max} decimal digits."
+                    )
 
-            raise ValidationError(message.format(field_name=field.label.text, min=self.min, max=self.max))
+            raise ValidationError(
+                message.format(field_name=field.label.text, min=self.min, max=self.max)
+            )
 
 
 class EqualStateTo(object):
@@ -78,6 +99,7 @@ class EqualStateTo(object):
         Error message to raise in case of a validation error. Can be
         interpolated using `{field_name}` and `{other_field_name}` if desired.
     """
+
     def __init__(self, other_field_name, message=None):
         self.other_field_name = other_field_name
         self.message = message
@@ -86,24 +108,42 @@ class EqualStateTo(object):
         try:
             other = form[self.other_field_name]
         except KeyError:
-            raise ValidationError(_(u"Invalid field name '{field_name}'.").format(field_name=self.other_field_name))
+            raise ValidationError(
+                _(u"Invalid field name '{field_name}'.").format(
+                    field_name=self.other_field_name
+                )
+            )
 
         other_field_empty = False
-        if not other.raw_data or isinstance(other.raw_data[0], str_types) and not other.raw_data[0].strip():
+        if (
+            not other.raw_data
+            or isinstance(other.raw_data[0], str_types)
+            and not other.raw_data[0].strip()
+        ):
             other_field_empty = True
 
         field_empty = False
-        if not field.raw_data or isinstance(field.raw_data[0], str_types) and not field.raw_data[0].strip():
+        if (
+            not field.raw_data
+            or isinstance(field.raw_data[0], str_types)
+            and not field.raw_data[0].strip()
+        ):
             field_empty = True
 
         if field_empty != other_field_empty:
 
             message = self.message
             if message is None:
-                message = _(u"'{field_name}' and '{other_field_name}' must be of equal state.")
+                message = _(
+                    u"'{field_name}' and '{other_field_name}' must be of equal state."
+                )
 
             field.errors[:] = []
-            raise ValidationError(message.format(field_name=field.label.text, other_field_name=other.label.text))
+            raise ValidationError(
+                message.format(
+                    field_name=field.label.text, other_field_name=other.label.text
+                )
+            )
 
 
 class InputRequiredIfCheckbox(object):
@@ -119,6 +159,7 @@ class InputRequiredIfCheckbox(object):
         If True (the default) also stop the validation chain on input which
         consists of only whitespace.
     """
+
     def __init__(self, checkbox_name, message=None, strip_whitespace=True):
         self.checkbox_name = checkbox_name
         self.message = message
@@ -131,17 +172,29 @@ class InputRequiredIfCheckbox(object):
         try:
             checkbox = form[self.checkbox_name]
         except KeyError:
-            raise ValidationError(_(u"Invalid field name '{field_name}'.").format(field_name=self.checkbox_name))
+            raise ValidationError(
+                _(u"Invalid field name '{field_name}'.").format(
+                    field_name=self.checkbox_name
+                )
+            )
 
         if not checkbox.data:
             field.errors[:] = []
             raise StopValidation()
         else:
-            if not field.raw_data or isinstance(field.raw_data[0], str_types) and not self.str_check(field.raw_data[0]):
+            if (
+                not field.raw_data
+                or isinstance(field.raw_data[0], str_types)
+                and not self.str_check(field.raw_data[0])
+            ):
 
                 message = self.message
                 if message is None:
                     message = _(u"'{field_name}' is required for '{cbx_name}'.")
 
                 field.errors[:] = []
-                raise ValidationError(message.format(field_name=field.label.text, cbx_name=checkbox.label.text))
+                raise ValidationError(
+                    message.format(
+                        field_name=field.label.text, cbx_name=checkbox.label.text
+                    )
+                )

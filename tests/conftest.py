@@ -14,9 +14,9 @@ def dummy_field():
 @pytest.fixture
 def cbx_ticked(dummy_field):
     cbx = dummy_field()
-    cbx.raw_data = ['y']
+    cbx.raw_data = ["y"]
     cbx.data = True
-    cbx.label = 'Checkbox_true'
+    cbx.label = "Checkbox_true"
     return cbx
 
 
@@ -25,7 +25,7 @@ def cbx_unticked(dummy_field):
     cbx = dummy_field()
     cbx.raw_data = []
     cbx.data = False
-    cbx.label = 'Checkbox_false'
+    cbx.label = "Checkbox_false"
     return cbx
 
 
@@ -34,7 +34,7 @@ def input_filled(dummy_field):
     f = dummy_field()
     f.raw_data = ["foobar"]
     f.data = "foobar"
-    f.label = 'Input_filled'
+    f.label = "Input_filled"
     return f
 
 
@@ -43,7 +43,7 @@ def input_empty(dummy_field):
     f = dummy_field()
     f.raw_data = []
     f.data = False
-    f.label = 'Input_empty'
+    f.label = "Input_empty"
     return f
 
 
