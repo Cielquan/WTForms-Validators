@@ -63,7 +63,7 @@ class DecimalDigits(object):
                 else:
                     message = _(u'Number must have between {min} and {max} decimal digits.')
 
-            raise ValidationError(message.format(field_name=field.label, min=self.min, max=self.max))
+            raise ValidationError(message.format(field_name=field.label.text, min=self.min, max=self.max))
 
 
 class EqualStateTo(object):
@@ -103,7 +103,7 @@ class EqualStateTo(object):
                 message = _(u"'{field_name}' and '{other_field_name}' must be of equal state.")
 
             field.errors[:] = []
-            raise ValidationError(message.format(field_name=field.label, other_field_name=other.label))
+            raise ValidationError(message.format(field_name=field.label.text, other_field_name=other.label.text))
 
 
 class InputRequiredIfCheckbox(object):
@@ -144,4 +144,4 @@ class InputRequiredIfCheckbox(object):
                     message = _(u"'{field_name}' is required for '{cbx_name}'.")
 
                 field.errors[:] = []
-                raise ValidationError(message.format(field_name=field.label, cbx_name=checkbox.label))
+                raise ValidationError(message.format(field_name=field.label.text, cbx_name=checkbox.label.text))

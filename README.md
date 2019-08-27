@@ -51,6 +51,6 @@ match the new needs. The rights of the original work lie by the [creators](https
 Christian Riedel
 
 ## Version and State
-Version: 1.0.4
+Version: 1.0.5
 
-State: 24.06.2019
+State: 27.08.2019
